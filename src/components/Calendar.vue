@@ -1,6 +1,5 @@
 <template>
-  <div class="m-auto">
-    <h1 class="text-3xl my-2 text-center"> Calendar </h1>
+  <div class="m-auto max-w-md">
     <section class="mx-2 flex justify-between">
       <h2 class="font-bold">{{ currentMonthName }} </h2>
       <h2 class="font-bold">{{ currentYear }} </h2>
@@ -21,12 +20,12 @@
         {{ day }}
       </p>
     </section>
-    <section class="flex  flex-wrap">
+    <section class="flex  flex-wrap" style="max-height: 150px">
       <p class="text-center" style="width: 14.28%"
         v-for="num in startDay()"
         :key="num"></p>
       <p
-        class="text-center border rounded-2xl"
+        class="hover:bg-green-500 text-center border rounded-2xl"
         style="width: 14.28%"
         v-for="num in daysInMonth()"
         :key="num"
@@ -83,9 +82,12 @@ export default {
       }
     },
     currentDateClass (num) {
-      const date = JSON.parse(localStorage.getItem('selectedDay'))
-      if (new Date(this.currentYear, this.currentMonth, num).toDateString() === new Date(date.year, date.month, date.day).toDateString()) {
-        return 'bg-teal-400'
+      let date = JSON.parse(localStorage.getItem('selectedDay'))
+      if (!date) {
+        date = new Date().toDateString()
+      }
+      if (new Date(this.currentYear, this.currentMonth, num).toDateString() === date) {
+        return 'bg-teal-400 hover:bg-teal-400'
       } else {
         const calenderFullDate = new Date(this.currentYear, this.currentMonth, num).toDateString()
         const currentFullDate = new Date().toDateString()
@@ -93,15 +95,23 @@ export default {
       }
     },
     selectDay (day) {
-      const sD = {
-        day: day,
-        month: this.currentMonth,
-        year: this.currentYear
+      const sD = new Date(this.currentYear, this.currentMonth, day).toDateString()
+      if (sD === JSON.parse(localStorage.getItem('selectedDay'))) {
+        localStorage.setItem('startDay', JSON.stringify(sD))
       }
       localStorage.setItem('selectedDay', JSON.stringify(sD))
       this.$forceUpdate()
-      // render()
     }
+    //,
+    // selectStartDay (day) {
+    //   const sD = {
+    //     day: day,
+    //     month: this.currentMonth,
+    //     year: this.currentYear
+    //   }
+    //   localStorage.setItem('startDay', JSON.stringify(sD))
+    //   this.$forceUpdate()
+    // }
   },
   computed: {
     currentMonthName () {
