@@ -61,7 +61,7 @@ export default {
       date.setDate(date.getDate() - 5 - 1)
       for (let i = 0; i <= (h / 58) - 1; i++) {
         date.setDate(date.getDate() + 1)
-        const num = (date >= new Date(this.dateOfStartRun)) ? ' -> ' + ((date - new Date(this.dateOfStartRun)) / (3600 * 24 * 1000) + 1) : ''
+        const num = (date >= new Date(this.dateOfStartRun)) ? ' -> ' + Math.floor((date - new Date(this.dateOfStartRun)) / (3600 * 24 * 1000) + 1) : ''
         const strD = this.days[date.getDay()] + ' ' + prefix(date.getDate()) + '.' + prefix(date.getMonth() + 1) + '.' + date.getFullYear() + num
         const forPush = { date: date.toDateString(), strD }
         listDays.push(forPush)
