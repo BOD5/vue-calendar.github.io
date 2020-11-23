@@ -39,7 +39,6 @@
 </template>
 
 <script>
-// import { render } from './DayList'
 export default {
   data () {
     return {
@@ -102,16 +101,6 @@ export default {
       localStorage.setItem('selectedDay', JSON.stringify(sD))
       this.$forceUpdate()
     }
-    //,
-    // selectStartDay (day) {
-    //   const sD = {
-    //     day: day,
-    //     month: this.currentMonth,
-    //     year: this.currentYear
-    //   }
-    //   localStorage.setItem('startDay', JSON.stringify(sD))
-    //   this.$forceUpdate()
-    // }
   },
   computed: {
     currentMonthName () {

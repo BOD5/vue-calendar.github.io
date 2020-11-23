@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-indigo-800 h-screen">
+  <div class="bg-indigo-800 min-h-screen">
     <div class="flex">
       <div style="position: fixed; left: calc(50% - 210px); top: 25px;">
         <button
@@ -8,7 +8,10 @@
         >
         </button>
       </div>
-        <Modal v-if="isModalOpen" @close="isModalOpen = false, this.$forceUpdate">
+        <Modal
+        v-if="isModalOpen"
+        @close="fn"
+        >
           <template #title>
             <h2>
               Start you running
@@ -20,7 +23,7 @@
           </div>
           </template>
         </Modal>
-      <div class="w-full flex">
+      <div class="flex w-full">
         <DayList />
       </div>
     </div>
@@ -35,6 +38,21 @@ import { ref } from 'vue'
 
 export default {
   components: { DayList, Modal, Calendar },
+  methods: {
+    // up () {
+    //   this.$forceUpdate()
+    // },
+    fn () {
+      console.log(' - :53 -> ', JSON.parse(localStorage.getItem('selectedDay'))) // eslint-disable-line no-console
+      this.isModalOpen = false
+      // this.up()
+    }
+  },
+  computed: {
+    // curD () {
+    //   return (JSON.parse(localStorage.getItem('selectedDay'))) ? JSON.parse(localStorage.getItem('selectedDay')) : new Date().toDateString()
+    // }
+  },
   setup () {
     const isModalOpen = ref(false)
     return { isModalOpen }
