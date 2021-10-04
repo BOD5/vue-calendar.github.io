@@ -61,7 +61,6 @@ export default {
 
     const daysList = computed(() => {
       const { displayedDate, dateOfStartRun } = props
-      console.log(' - props:78 >', { displayedDate, dateOfStartRun })
       const date = new Date(displayedDate)
       const listDays = []
       date.setDate(date.getDate() - 10 - 1)
