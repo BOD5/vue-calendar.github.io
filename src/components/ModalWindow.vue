@@ -21,10 +21,14 @@
 
 <script>
 export default {
-  setup (_, { emit }) {
-    function close () {
-      emit('close')
+  name: 'modal-window',
+  emits: {
+    close: {
+      required: true
     }
+  },
+  setup (props, { emit }) {
+    const close = () => emit('close')
     return { close }
   }
 }

@@ -30,7 +30,7 @@
         v-for="num in daysInMonth()"
         :key="num"
         :class="currentDateClass(num)"
-        @click="selectDay(num)"
+        @click="selectDate(num)"
       >
         {{num}}
         </p>
@@ -39,72 +39,91 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue'
 export default {
-  data () {
-    return {
-      currentDate: new Date().getUTCDate(),
-      monthUa: [
-        'Січень', 'Лютий', 'Березень',
-        'Квітень', 'Травень', 'Червень',
-        'Липень', 'Серпень', 'Вересень',
-        'Жовтень', 'Листопад', 'Грудень'
-      ],
-      currentYear: new Date().getFullYear(),
-      currentMonth: new Date().getMonth(),
-      days: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
-      arrowR: '-->',
-      arrowL: '<--'
+  name: 'Calendar',
+  props: {
+    displayedDate: {
+      type: String,
+      required: true
     }
   },
-  methods: {
-    daysInMonth () {
-      return new Date(this.currentYear, this.currentMonth + 1, 0).getDate()
-    },
-    startDay () {
-      const d = new Date(this.currentYear, this.currentMonth, 1).getDay()
+  emits: ['selected-date'],
+  setup (props, { emit }) {
+    const monthUa = [
+      'Січень', 'Лютий', 'Березень',
+      'Квітень', 'Травень', 'Червень',
+      'Липень', 'Серпень', 'Вересень',
+      'Жовтень', 'Листопад', 'Грудень'
+    ]
+    const currentYear = ref(new Date(props.displayedDate).getFullYear())
+    const currentMonth = ref(new Date(props.displayedDate).getMonth())
+    const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд']
+    const arrowR = '-->'
+    const arrowL = '<--'
+
+    const daysInMonth = () => {
+      return new Date(currentYear.value, currentMonth.value + 1, 0).getDate()
+    }
+
+    const startDay = () => {
+      const d = new Date(currentYear.value, currentMonth.value, 1).getDay()
       return (d === 0) ? 6 : d - 1
-    },
-    prev () {
-      if (this.currentMonth === 0) {
-        this.currentYear--
-        this.currentMonth = 11
+    }
+
+    const prev = () => {
+      if (currentMonth.value === 0) {
+        currentYear.value--
+        currentMonth.value = 11
       } else {
-        this.currentMonth--
+        currentMonth.value--
       }
-    },
-    next () {
-      if (this.currentMonth === 11) {
-        this.currentYear++
-        this.currentMonth = 0
+    }
+
+    const next = () => {
+      if (currentMonth.value === 11) {
+        currentYear.value++
+        currentMonth.value = 0
       } else {
-        this.currentMonth++
+        currentMonth.value++
       }
-    },
-    currentDateClass (num) {
-      let date = JSON.parse(localStorage.getItem('selectedDay'))
+    }
+
+    const currentDateClass = (num) => {
+      let date = props.displayedDate
       if (!date) {
         date = new Date().toDateString()
       }
-      if (new Date(this.currentYear, this.currentMonth, num).toDateString() === date) {
+      if (new Date(currentYear.value, currentMonth.value, num).toDateString() === date) {
         return 'bg-teal-400 hover:bg-teal-400'
-      } else {
-        const calenderFullDate = new Date(this.currentYear, this.currentMonth, num).toDateString()
-        const currentFullDate = new Date().toDateString()
-        return calenderFullDate === currentFullDate ? 'bg-orange-500' : ''
       }
-    },
-    selectDay (day) {
-      const sD = new Date(this.currentYear, this.currentMonth, day).toDateString()
-      if (sD === JSON.parse(localStorage.getItem('selectedDay'))) {
-        localStorage.setItem('startDay', JSON.stringify(sD))
-      }
-      localStorage.setItem('selectedDay', JSON.stringify(sD))
-      this.$forceUpdate()
+      const calenderFullDate = new Date(currentYear.value, currentMonth.value, num).toDateString()
+      const currentFullDate = new Date().toDateString()
+      return calenderFullDate === currentFullDate ? 'bg-orange-500' : ''
     }
-  },
-  computed: {
-    currentMonthName () {
-      return this.monthUa[this.currentMonth]
+
+    const selectDate = (day) => {
+      const sD = new Date(currentYear.value, currentMonth.value, day).toDateString()
+      emit('selected-date', sD)
+    }
+
+    const currentMonthName = computed(() => {
+      return monthUa[currentMonth.value]
+    })
+
+    return {
+      currentMonth,
+      currentYear,
+      daysInMonth,
+      startDay,
+      prev,
+      next,
+      currentDateClass,
+      currentMonthName,
+      selectDate,
+      days,
+      arrowR,
+      arrowL
     }
   }
 }
