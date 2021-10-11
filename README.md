@@ -1,5 +1,10 @@
 # vue-calendar
 
+## Preview
+```
+https://bod5.github.io/vue-calendar.github.io/
+```
+
 ## Project setup
 ```
 npm install
